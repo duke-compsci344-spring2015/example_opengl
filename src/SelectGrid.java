@@ -16,13 +16,7 @@ public class SelectGrid extends Scene {
     private int myNumRows;
     private float[][][] myColors;
 
-    /**
-     * Create the scene with the given arguments.
-     *
-     * For example, the number of strands to display.
-     *
-     * @param args command-line arguments
-     */
+
     public SelectGrid (String[] args) {
         super("Select Grid");
     }
@@ -42,13 +36,9 @@ public class SelectGrid extends Scene {
                 myColors[r][c][0] = (c % 3) == 0 ? 1 : 0;
                 myColors[r][c][1] = (c % 3) == 1 ? 1 : 0;
                 myColors[r][c][2] = (c % 3) == 2 ? 1 : 0;
-                myColors[r][c][2] = 0.8f;
+                myColors[r][c][2] = 1;
             }
         }
-        // turn bare bones lighting on
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_LIGHT0);
-        gl.glEnable(GL2.GL_COLOR_MATERIAL);
     }
 
     /**
@@ -72,15 +62,11 @@ public class SelectGrid extends Scene {
             // name objects according to location in grid
             gl.glLoadName(r);
             for (int c = start; c != end; c += incr) {
-                gl.glPushName(c);
-                {
+                gl.glPushName(c); {
                     // color including alpha
-                    gl.glColor4f(myColors[r][c][0], myColors[r][c][1], myColors[r][c][2],
-                                 myColors[r][c][3]);
-                    gl.glPushMatrix();
-                    {
-                        gl.glTranslatef((r - half) * 2.0f / myNumRows, (c - half) * 2.0f /
-                                                                       myNumRows, 0.0f);
+                    gl.glColor4fv(myColors[r][c], 0);
+                    gl.glPushMatrix(); {
+                        gl.glTranslatef((r-half)*2 / myNumRows, (c-half)*2 / myNumRows, 0);
                         gl.glRotatef(myAngle, 0, 1, 0);
                         glut.glutSolidCube(0.8f / myNumRows);
                     }
@@ -92,22 +78,22 @@ public class SelectGrid extends Scene {
     }
 
     /**
-     * Set the camera's view of the scene.
-     */
-    @Override
-    public void setCamera (GL2 gl, GLU glu, GLUT glut) {
-        glu.gluLookAt(0, 0, 2.5, // from position
-                      0, 0, 0, // to position
-                      0, 1, 0); // up direction
-    }
-
-    /**
      * Animate the scene by changing its state slightly.
      */
     @Override
     public void animate (GL2 gl, GLU glu, GLUT glut) {
         // animate model by spinning it a few degrees each time
-        myAngle += 1f;
+        myAngle += 1;
+    }
+
+    /**
+     * Set the camera's view of the scene.
+     */
+    @Override
+    public void setCamera (GL2 gl, GLU glu, GLUT glut) {
+        glu.gluLookAt(0, 0, 2.5, // from position
+                      0, 0, 0,   // to position
+                      0, 1, 0);  // up direction
     }
 
     /**
@@ -133,6 +119,7 @@ public class SelectGrid extends Scene {
         myColors[r][c][0] += 0.1;
         System.out.println(numSelected + ": chose [" + r + ", " + c + "]");
     }
+
 
     // allow program to be run from here
     public static void main (String[] args) {
